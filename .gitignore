@@ -1,0 +1,15 @@
+# Java
+*.class
+*.jar
+*.war
+hs_err_pid*
+
+# Gradle
+bin/
+build/
+.gradle
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
