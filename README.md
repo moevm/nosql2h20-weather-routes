@@ -1,5 +1,5 @@
 # nosql2h20-weather-routes
-Application for building walking routes in St. Petersburg, taking into account weather conditions. The route is laid in such a way as to avoid areas with precipitation.
+Application for building walking routes in St. Petersburg, taking into account weather conditions. The route is laid in such a way as to avoid areas with rainfalls.
 ## How to deploy
 Use this command to run application with Docker Compose:
 ``` 
