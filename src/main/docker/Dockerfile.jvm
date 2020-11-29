@@ -21,6 +21,18 @@
 # docker run -i --rm -p 8080:8080 -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" quarkus/nosql2h20-weather-routes-jvm
 #
 ###
+FROM openjdk:11-jdk-slim as build
+WORKDIR /workdir/weather-routes
+
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+COPY gradle.properties .
+COPY src src
+
+RUN ./gradlew build
+
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1
 
 ARG JAVA_PACKAGE=java-11-openjdk-headless
@@ -45,8 +57,10 @@ RUN microdnf install curl ca-certificates ${JAVA_PACKAGE} \
 # Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
 ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 
-COPY build/lib/* /deployments/lib/
-COPY build/*-runner.jar /deployments/app.jar
+ARG BUILDDIR=/workdir/weather-routes/build
+RUN mkdir /deployments/lib
+COPY --from=build ${BUILDDIR}/lib/* /deployments/lib/
+COPY --from=build ${BUILDDIR}/*-runner.jar /deployments/app.jar
 
 EXPOSE 8080
 USER 1001
