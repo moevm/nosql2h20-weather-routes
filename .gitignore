@@ -5,11 +5,15 @@
 hs_err_pid*
 
 # Gradle
-bin/
+.gradle/
 build/
-.gradle
 
 # IntelliJ IDEA
 .idea/
+*.ipr
 *.iml
 *.iws
+
+# patch
+*.orig
+*.rej

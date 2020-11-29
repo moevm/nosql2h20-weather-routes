@@ -1,4 +1,0 @@
-neo4j:
-  uri: bolt://db:7687
-  user: neo4j
-  password: secret
