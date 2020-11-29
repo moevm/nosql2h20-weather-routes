@@ -1,1 +1,12 @@
-rootProject.name = 'nosql2h20-weather-routes'
+pluginManagement {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    plugins {
+        id "${quarkusPluginId}" version "${quarkusPluginVersion}"
+    }
+}
+
+rootProject.name='nosql2h20-weather-routes'
