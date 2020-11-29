@@ -1,4 +1,4 @@
-body{
+body {
     font-family: Roboto, sans-serif;
     font-style: normal;
     font-weight: normal;
@@ -10,53 +10,64 @@ body{
     flex-flow: column wrap;
     color: #000000;
 }
-header{
+
+header {
 
     align-items: center;
     flex-flow: column wrap;
 }
-p{
+
+p {
     margin-top: 3%;
     margin-bottom: 1%;
 }
-p.rainm{
+
+p.rainm {
     margin-top: 0;
 }
-p.allm{
+
+p.allm {
     margin-top: 0;
 }
-input{
+
+input {
     height: 44px;
     margin: 2%;
-    align-items:stretch;
+    align-items: stretch;
     width: 680px;
 }
+
 input.form-control {
     display: flex;
     align-items: center;
     width: 680px;
     margin: 2%;
-}/*
+}
+
+/*
 main {
     display: flex;
     flex-direction: column;
 }*/
 
-div.bts{
+div.bts {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-around;
-}/*
+}
+
+/*
 
 footer {
     display: flex;
     justify-content: center;
 }*/
-table{
+table {
     margin: 3%;
 }
-div.map{
+
+div.map {
     width: 685px;
-    height:400px;
+    height: 400px;
     margin: 3%;
 }
