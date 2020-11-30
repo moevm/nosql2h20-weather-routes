@@ -53,3 +53,23 @@ MATCH (o:Object), (p: Point)--(o)
 WHERE ID(o) = 7
 RETURN o, p
 
+### ДЛЯ ФИЛЬТРАЦИИ ТАБЛИЦЫ
+
+8. Вытащить только Object с name
+
+MATCH (o:Object {name: 'Собор'})
+RETURN o
+
+9. Вытащить только Object с street (house_number)
+
+MATCH (o:Object )
+WHERE o.street CONTAINS 'Невский проспект'
+RETURN o
+
+10. Вытащить Object ПО АДРЕСУ (УЛИЦА + ДОМ)
+
+MATCH (o:Object )
+WHERE 'Невский проспект 14/3' CONTAINS o.street+ ' '+o.house_number
+RETURN o
+
+
