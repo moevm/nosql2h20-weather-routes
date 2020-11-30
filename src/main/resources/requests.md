@@ -40,4 +40,16 @@ WHERE a.name = 'Собор' AND b.osm_id = 3
 CREATE (a)-[r:MEMBER]->(b)
 RETURN type(r)
 
+### ДЛЯ ТАБЛИЦЫ
+
+6. Вытащить всех Object
+
+MATCH (n: Object)
+RETURN n
+
+7. Вытащить Object и все его Point
+
+MATCH (o:Object), (p: Point)--(o)
+WHERE ID(o) = 7
+RETURN o, p
 
