@@ -72,4 +72,21 @@ MATCH (o:Object )
 WHERE 'Невский проспект 14/3' CONTAINS o.street+ ' '+o.house_number
 RETURN o
 
+### ДЛЯ ПОИСКА ПУТЕЙ И СТАТИСТИКИ
 
+11. Поиск максимально близкой Point по координатам
+
+MATCH (a: Point)
+WHERE min(distance(point({latitude: a.lat, longitude: a.lon}), point({latitude: 22.2, longitude: 22.2})))
+RETURN distance
+
+MATCH (a: Point)
+WHERE distance(point({latitude: a.lat, longitude: a.lon}), point({latitude: 22, longitude: 22})) = distance
+RETURN a
+
+13. Самый короткий путь, где осадки меньше какого-то числа: **возвращает сразу протяженость пути**
+
+MATCH (a:Point {osm_id:1} ), (b:Point {osm_id: 3}), p=allShortestPaths((a)-[*]-(b))
+WHERE ALL(r IN relationships(p) WHERE endNode(r).precipitation_value < 30 AND type(r)= 'WAY')
+RETURN p, reduce(totalDistance = 0, x in relationships(p)| totalDistance + x.distance) as dist
+ORDER BY dist ASC 
