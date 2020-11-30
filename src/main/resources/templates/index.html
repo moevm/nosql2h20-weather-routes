@@ -1,0 +1,33 @@
+{#include base.html}
+
+{#contents}
+<header>
+    <input name="from" class="form-control" type="text" value="Откуда">
+    <input name="to" class="form-control" type="text" value="Куда">
+</header>
+<main>
+    <div class="map" id="map_canvas"></div>
+
+    <div class="bts">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Опции
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="/search">Поиск</a>
+                <a class="dropdown-item" href="#">Импорт</a>
+                <a class="dropdown-item" href="#">Экспорт</a>
+            </div>
+        </div>
+        <form action="/route">
+            <button type="submit" name="searchbtn" class="btn btn-primary">Найти</button>
+        </form>
+    </div>
+</main>
+<footer>
+    <img src="assets/images/icon.png" alt="">
+</footer>
+
+{/contents}
+{/include}

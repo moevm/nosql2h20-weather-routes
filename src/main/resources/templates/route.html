@@ -1,0 +1,42 @@
+{#include base.html}
+
+{#contents}
+<header>
+    <p>
+        Величина пути с осадками на данном маршруте составляет:
+    </p>
+    <p class="rainm">
+        0 м
+    </p>
+    <p>
+        Общая протяженность пути составляет:
+    </p>
+    <p class="allm">
+        1000 м
+    </p>
+</header>
+<main>
+    <img src="assets/images/map.png" alt="map">
+    <div class="bts">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Опции
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="/search">Поиск</a>
+                <a class="dropdown-item" href="#">Импорт</a>
+                <a class="dropdown-item" href="#">Экспорт</a>
+            </div>
+        </div>
+        <form action="/">
+            <button type="submit" name="backbtn" class="btn btn-primary">Назад</button>
+        </form>
+    </div>
+</main>
+<footer>
+    <img src="assets/images/icon.png" alt="">
+</footer>
+
+{/contents}
+{/include}
