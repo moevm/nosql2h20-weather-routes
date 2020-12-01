@@ -1,10 +1,10 @@
 ### Общие
 
-1. Выбрать все
+0. Выбрать все
 
 MATCH (a) return a
 
-2. Выбрать по id
+0. Выбрать по id
 
 MATCH (s)
 WHERE ID(s) = 65110
@@ -20,7 +20,7 @@ RETURN s
 
 4. Выбрать Way по osm_id и вернуть id его точек
 
-MATCH (a:Point), (b:Point), r = (a)-[:WAY {osm_id: 1}]->(b)
+MATCH (a:Point), (b:Point), r = (a)-[:WAY {distance: 151554.8184623238}]->(b)
 RETURN a.osm_id, b.osm_id
 
 ### Создание
