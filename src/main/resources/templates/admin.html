@@ -1,0 +1,32 @@
+{#include base.html}
+{#content}
+<main>
+    <div class="bts">
+        <div>
+            <h1>Admin panel:</h1>
+        </div>
+        <div>
+            <form id="upload_form" action="/api/db/upload" method="post" enctype="multipart/form-data">
+                <div>
+                    <label for="file">Choose .osm file to upload</label>
+                    <input id="file" name="uploadedFile" type="file" multiple>
+                </div>
+                <div>
+                    <button id="upload_btn" class="btn btn-secondary" type="submit">
+                        Upload
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div>
+            <a class="btn btn-secondary" href="/api/db/drop">
+                Drop database
+            </a>
+        </div>
+    </div>
+</main>
+<footer>
+    <img src="assets/images/icon.png" alt="">
+</footer>
+{/content}
+{/include}
