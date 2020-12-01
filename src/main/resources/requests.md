@@ -1,14 +1,27 @@
 ### Общие
 
-0. Выбрать все
+1. Выбрать все
 
 MATCH (a) return a
 
-0. Выбрать по id
+2. Выбрать по id
 
 MATCH (s)
 WHERE ID(s) = 65110
 RETURN s
+
+### Дополнительные для заполнения БД
+
+3. Выбрать Point по osm_id
+
+MATCH (p:Point)
+WHERE p.osm_id = 1
+RETURN s
+
+4. Выбрать Way по osm_id и вернуть id его точек
+
+MATCH (a:Point), (b:Point), r = (a)-[:WAY {distance: 151554.8184623238}]->(b)
+RETURN a.osm_id, b.osm_id
 
 ### Создание
 
@@ -26,7 +39,7 @@ RETURN n
 
 MATCH (a:Point),(b:Point)
 WHERE a.osm_id = 1 AND b.osm_id = 2
-CREATE (a)-[r:WAY { distance: distance(point({latitude: a.lat, longitude: a.lon}), point({latitude: b.lat, longitude: b.lon}))}]->(b)
+CREATE (a)-[r:WAY { osm_id: 1, distance: distance(point({latitude: a.lat, longitude: a.lon}), point({latitude: b.lat, longitude: b.lon}))}]->(b)
 
 
 4. Добавление Object
