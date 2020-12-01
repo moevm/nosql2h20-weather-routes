@@ -20,7 +20,7 @@ RETURN s
 
 4. Выбрать Way по osm_id и вернуть id его точек
 
-MATCH (a:Point), (b:Point), r = (a)-[:WAY {distance: 151554.8184623238}]->(b)
+MATCH (a:Point), (b:Point), r = (a)-[:WAY {osm_id: 1}]->(b)
 RETURN a.osm_id, b.osm_id
 
 ### Создание
