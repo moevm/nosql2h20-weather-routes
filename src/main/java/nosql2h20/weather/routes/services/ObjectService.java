@@ -3,6 +3,7 @@ package nosql2h20.weather.routes.services;
 import nosql2h20.weather.routes.model.Object;
 import nosql2h20.weather.routes.model.Point;
 import org.neo4j.driver.*;
+import org.neo4j.driver.Record;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

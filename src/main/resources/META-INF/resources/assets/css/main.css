@@ -56,7 +56,11 @@ div.bts {
     justify-content: space-around;
     align-items: center;
 }
-
+div.butt{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
 /*
 
 footer {
