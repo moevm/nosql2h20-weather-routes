@@ -5,7 +5,7 @@
     <div class="bts">
         <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
             <div class="card-body">
-                <form id="upload_form" action="/api/db/upload" method="post" enctype="multipart/form-data">
+                <form id="upload_form" action="/api/database/upload/map" method="post" enctype="multipart/form-data">
                     <label for="file">Choose .osm file to upload</label>
                     <input id="file" name="uploadedFile" type="file" multiple>
                     <button id="upload_btn" class="btn btn-secondary" type="submit">
@@ -15,7 +15,7 @@
             </div>
         </div>
         <div>
-            <a class="btn btn-secondary" href="/api/db/drop">
+            <a class="btn btn-secondary" href="/api/database/drop">
                 Drop database
             </a>
         </div>

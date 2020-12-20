@@ -8,8 +8,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class DatabaseService {
-    private static final Logger logger = Logger.getLogger(DatabaseService.class);
+public class DatabaseManagementService {
+    private static final Logger logger = Logger.getLogger(DatabaseManagementService.class);
 
     @Inject
     Driver driver;
