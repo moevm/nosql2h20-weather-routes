@@ -3,38 +3,22 @@
 <script src="assets/js/searchFunctions.js" type="text/javascript"></script>
 {/links}
 {#content}
-<input name="searchtext" class="form-control" type="text" placeholder="Введите адрес или название объекта">
-<button type="button" name="searchbtn" class="btn btn-primary">Найти</button>
+<input id="searchaddr" name="searchtext" class="form-control" type="text" placeholder="Введите адрес объекта">
+<input id="searchname" name="searchtext" class="form-control" type="text" placeholder="Введите название объекта">
 <main>
-    <table class="table">
+    <table id="objects" class="table">
         <thead class="thead-inverse">
         <tr class="table-primary">
             <th>Объект</th>
             <th>Улица</th>
             <th>Номер дома</th>
             <th>Координаты</th>
+            </div>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th>Пирамиды Хеопса</th>
-            <td>Невский пр.</td>
-            <td>1</td>
-            <td>85.56 38.89</td>
-        </tr>
-        <tr>
-            <th>Колосс Родосский</th>
-            <td>Невский пр.</td>
-            <td>2</td>
-            <td>85.56 38.88</td>
-        </tr>
-        <tr>
-            <th>Висячие сады</th>
-            <td>Невский пр.</td>
-            <td>1</td>
-            <td>85.56 38.87</td>
-        </tr>
         </tbody>
+
     </table>
     <form action="/">
         <button type="submit" name="backbtn" class="btn btn-primary">Назад</button>

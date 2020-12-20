@@ -1,22 +1,63 @@
-//$(document).ready(function(){
-//$.getJSON('GET_OBJECT.json', function(data) {
-//        for(var i=0;i<data.objects.length;i++){
-//            $('#objects').append('<tr><th>' + data.objects[i].name + '</th><td>' + data.objects[i].street +
-//                '</td><td>' + data.objects[i].house_number + '</td><td>' + data.objects[i].points[0].lon + ' ' +  data.objects[i].points[0].lat + '</td><tr>');
-//        }
-//    });
-//
-//});
-//
-//}
-
 function init(){
-$.getJSON('GET_OBJECT.json', function(data) {
-        for(var i=0;i<data.objects.length;i++){
-            $('#objects').append('<tr><th>' + data.objects[i].name + '</th><td>' + data.objects[i].street +
-                '</td><td>' + data.objects[i].house_number + '</td><td>' + data.objects[i].points[0].lon + ' ' +  data.objects[i].points[0].lat + '</td><tr>');
-        }
-    });
 
+//$.ajax({
+//  method: "GET",
+//  url: "http://localhost:8080/api/object/all",
+//})
+//  .done(function( json ) {
+//        var obj = jQuery.parseJSON(json)
+//        for(var i=0;i<obj.length;i++){
+//            var info = '<tr><th>' + obj[i].name + '</th><td>' + obj[i].street + '</td><td>' + obj[i].houseNumber + '</td>'
+//            var points = '<td> <div class="points">'
+//            for (var j=0; j<obj[i].points.length; j++) {
+//                points += obj[i].points[j].latitude + ' ' + obj[i].points[j].longitude + ' '
+//            }
+//            points += '</div></td><tr>'
+//            console.log(info + points)
+//            $('#objects').append(info+points);
+//        }
+//  });
+
+    $('#searchname').keyup(function(){
+        val = $('#searchname').val()
+        //$.ajax({
+        //  method: "GET",
+        //  url: "http://localhost:8080/api/object/filter/name/" + val,
+        //})
+        //  .done(function( json ) {
+        //        var obj = jQuery.parseJSON(json)
+        //        for(var i=0;i<obj.length;i++){
+        //            var info = '<tr><th>' + obj[i].name + '</th><td>' + obj[i].street + '</td><td>' + obj[i].houseNumber + '</td>'
+        //            var points = '<td> <div class="points">'
+        //            for (var j=0; j<obj[i].points.length; j++) {
+        //                points += obj[i].points[j].latitude + ' ' + obj[i].points[j].longitude + ' '
+        //            }
+        //            points += '</div></td><tr>'
+        //            console.log(info + points)
+        //            $('#objects').append(info+points);
+        //        }
+        //  });
+    })
+
+    $('#searchaddr').keyup(function(){
+          val = $('#searchaddr').val()
+          //$.ajax({
+          //  method: "GET",
+          //  url: "http://localhost:8080/api/object/filter/address/" + val,
+          //})
+          //  .done(function( json ) {
+          //        var obj = jQuery.parseJSON(json)
+          //        for(var i=0;i<obj.length;i++){
+          //            var info = '<tr><th>' + obj[i].name + '</th><td>' + obj[i].street + '</td><td>' + obj[i].houseNumber + '</td>'
+          //            var points = '<td> <div class="points">'
+          //            for (var j=0; j<obj[i].points.length; j++) {
+          //                points += obj[i].points[j].latitude + ' ' + obj[i].points[j].longitude + ' '
+          //            }
+          //            points += '</div></td><tr>'
+          //            console.log(info + points)
+          //            $('#objects').append(info+points);
+          //        }
+          //  });
+    })
 
 }

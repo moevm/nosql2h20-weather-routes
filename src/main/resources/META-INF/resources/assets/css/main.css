@@ -72,3 +72,9 @@ div.map {
     height: 400px;
     margin: 3%;
 }
+
+.points {
+    overflow: scroll;
+    width: 300px;
+    height: 200px;
+}
