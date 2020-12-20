@@ -1,4 +1,18 @@
 {#include base.html}
+{#links}
+<!--Подключаем яндекс карты-->
+<script src="https://api-maps.yandex.ru/2.1/?apikey=3f8c1db2-2338-411e-a960-9a6015500eec&lang=ru_RU" type="text/javascript">
+</script>
+<script type="text/javascript">
+    ymaps.ready(init);
+    function init(){
+        var myMap = new ymaps.Map("map_canvas", {
+            center: [59.9386, 30.3141],
+            zoom: 10
+        });
+    }
+</script>
+{/links}
 {#content}
 <header>
     <input name="from" class="form-control" type="text" value="Откуда">
