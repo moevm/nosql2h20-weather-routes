@@ -17,7 +17,7 @@ $.ajax({
             $('#objects').append(info+points);
         }
   });
-
+//
     $('#searchname').keyup(function(){
         val = $('#searchname').val()
         $.ajax({
