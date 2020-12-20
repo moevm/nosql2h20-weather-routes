@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ApplicationScoped
-public class MapService {
-    private static final Logger logger = LoggerFactory.getLogger(MapService.class);
+public class MapFileService {
+    private static final Logger logger = LoggerFactory.getLogger(MapFileService.class);
 
-    public List<String> findAllMaps() throws IOException {
+    public List<String> findAllSavedMaps() throws IOException {
         String rootPath = getMapRootDirPath();
 
         try (Stream<Path> pathStream = Files.walk(Paths.get(rootPath))) {
@@ -68,7 +68,7 @@ public class MapService {
     }
 
     private String getMapRootDirPath() throws IOException {
-        URL mapDir = MapService.class.getClassLoader().getResource("maps");
+        URL mapDir = MapFileService.class.getClassLoader().getResource("maps");
         if (mapDir == null) {
             throw new IOException("Unable to find maps root dir.");
         }

@@ -2,7 +2,7 @@ package nosql2h20.weather.routes.resources.api;
 
 import nosql2h20.weather.routes.model.FileUploadForm;
 import nosql2h20.weather.routes.services.DatabaseManagementService;
-import nosql2h20.weather.routes.services.MapService;
+import nosql2h20.weather.routes.services.MapFileService;
 import nosql2h20.weather.routes.services.OpenStreetMapService;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ public class DatabaseResource {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseResource.class);
 
     @Inject
-    MapService mapService;
+    MapFileService mapFileService;
     @Inject
     OpenStreetMapService osmService;
     @Inject
@@ -33,7 +33,7 @@ public class DatabaseResource {
     public Response getAvailableMaps() {
         List<String> mapFiles;
         try {
-            mapFiles = mapService.findAllMaps();
+            mapFiles = mapFileService.findAllSavedMaps();
         } catch (IOException e) {
             logger.error("Error while finding available maps occurred.", e);
 
@@ -50,7 +50,7 @@ public class DatabaseResource {
         File map;
 
         try {
-            map = mapService.getMapFile(name);
+            map = mapFileService.getMapFile(name);
         } catch (IOException e) {
             logger.error("Error while getting map file occurred. Name: {}", name, e);
 
@@ -77,7 +77,7 @@ public class DatabaseResource {
     public Response uploadMap(@MultipartForm FileUploadForm uploadForm) {
         File map;
         try {
-            map = mapService.writeMapToFile(uploadForm.getData());
+            map = mapFileService.writeMapToFile(uploadForm.getData());
         } catch (IOException e) {
             logger.error("Error while saving uploaded map.", e);
 
