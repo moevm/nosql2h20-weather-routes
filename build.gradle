@@ -9,17 +9,31 @@ version = '0.0.1-SNAPSHOT'
 repositories {
     mavenLocal()
     mavenCentral()
+
+    maven {
+        url 'https://mvn.topobyte.de/'
+    }
+    maven {
+        url 'http://mvn.slimjars.com//'
+    }
 }
 
 dependencies {
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
 
-    implementation 'io.quarkus:quarkus-resteasy-jsonb'
-    implementation 'io.quarkus:quarkus-resteasy'
-    implementation 'io.quarkus:quarkus-resteasy-qute'
     implementation 'io.quarkus:quarkus-arc'
+    implementation 'io.quarkus:quarkus-resteasy'
+    implementation 'io.quarkus:quarkus-resteasy-jsonb'
+    implementation 'io.quarkus:quarkus-resteasy-multipart'
+    implementation 'io.quarkus:quarkus-resteasy-qute'
 
     implementation 'io.quarkus:quarkus-neo4j'
+
+    implementation 'de.topobyte:osm4j-core:1.1.0'
+    implementation 'de.topobyte:osm4j-xml:1.1.0'
+
+    // Utils:
+    implementation 'org.apache.commons:commons-lang3:3.11'
 
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
