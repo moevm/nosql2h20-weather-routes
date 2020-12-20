@@ -29,6 +29,8 @@ dependencies {
 
     implementation 'io.quarkus:quarkus-neo4j'
 
+    implementation 'org.jboss.logmanager:log4j2-jboss-logmanager'
+
     implementation 'de.topobyte:osm4j-core:1.1.0'
     implementation 'de.topobyte:osm4j-xml:1.1.0'
 

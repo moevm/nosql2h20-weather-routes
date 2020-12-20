@@ -5,20 +5,21 @@ import de.topobyte.osm4j.core.model.iface.*;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlReader;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jboss.logging.Logger;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -26,7 +27,7 @@ import static org.neo4j.driver.Values.parameters;
 
 @ApplicationScoped
 public class OpenStreetMapService {
-    private static final Logger logger = Logger.getLogger(OpenStreetMapService.class);
+    private static final Logger logger = LoggerFactory.getLogger(OpenStreetMapService.class);
 
     @Inject
     Driver driver;
@@ -38,53 +39,50 @@ public class OpenStreetMapService {
 
             reader.read();
         } catch (FileNotFoundException e) {
-            logger.error("Unable to read map. Path: {}.", map, e);
+            logger.error("Unable to find map file. Path: {}.", map, e);
         }
     }
 
     private static class Neo4jHandler implements OsmHandler {
 
         private final Driver driver;
+        private final AtomicReference<Session> sessionRef = new AtomicReference<>();
 
         public Neo4jHandler(Driver driver) {
             this.driver = driver;
         }
 
         @Override
-        public void handle(OsmBounds bounds) throws IOException {
+        public void handle(OsmNode node) {
+            Session session = getSession();
+
+            session.writeTransaction(tx -> tx.run(
+                    "CREATE (p:Point {osm_id: $osm_id, lat: $lat, lon: $lon, precipitation_value: 0})",
+                    parameters(
+                            "osm_id", node.getId(),
+                            "lat", node.getLatitude(),
+                            "lon", node.getLongitude()
+                    )
+            ));
         }
 
         @Override
-        public void handle(OsmNode node) throws IOException {
-            try (Session session = driver.session()) {
-                session.writeTransaction(tx -> tx.run(
-                        "CREATE (p:Point {osm_id: $osm_id, lat: $lat, lon: $lon, precipitation_value: 0})",
-                        parameters(
-                                "osm_id", node.getId(),
-                                "lat", node.getLatitude(),
-                                "lon", node.getLongitude()
-                        )
-                ));
-            }
-        }
+        public void handle(OsmWay way) {
+            Session session = getSession();
 
-        @Override
-        public void handle(OsmWay way) throws IOException {
             List<Pair<Long, Long>> nodePairs = createNodePairs(way);
 
             for (Pair<Long, Long> nodePair : nodePairs) {
-                try (Session session = driver.session()) {
-                    session.writeTransaction(tx -> tx.run(
-                            "MATCH (a:Point),(b:Point) " +
-                                    "WHERE a.osm_id = $a_osm_id AND b.osm_id = $b_osm_id " +
-                                    "CREATE (a)-[r:WAY { osm_id: $osm_id, distance: distance(point({latitude: a.lat, longitude: a.lon}), point({latitude: b.lat, longitude: b.lon}))}]->(b)",
-                            parameters(
-                                    "osm_id", way.getId(),
-                                    "a_osm_id", nodePair.getLeft(),
-                                    "b_osm_id", nodePair.getRight()
-                            )
-                    ));
-                }
+                session.writeTransaction(tx -> tx.run(
+                        "MATCH (a:Point),(b:Point) " +
+                                "WHERE a.osm_id = $a_osm_id AND b.osm_id = $b_osm_id " +
+                                "CREATE (a)-[r:WAY { osm_id: $osm_id, distance: distance(point({latitude: a.lat, longitude: a.lon}), point({latitude: b.lat, longitude: b.lon}))}]->(b)",
+                        parameters(
+                                "osm_id", way.getId(),
+                                "a_osm_id", nodePair.getLeft(),
+                                "b_osm_id", nodePair.getRight()
+                        )
+                ));
             }
         }
 
@@ -105,7 +103,9 @@ public class OpenStreetMapService {
         }
 
         @Override
-        public void handle(OsmRelation relation) throws IOException {
+        public void handle(OsmRelation relation) {
+            Session session = getSession();
+
             List<OsmTag> tags = IntStream.range(0, relation.getNumberOfTags())
                     .boxed()
                     .map(relation::getTag)
@@ -119,17 +119,17 @@ public class OpenStreetMapService {
             Optional<OsmTag> nameTag = findTag(tags, "name");
             Optional<OsmTag> streetTag = findTag(tags, "addr:street");
             Optional<OsmTag> houseNumberTag = findTag(tags, "addr:housenumber");
-            try (Session session = driver.session()) {
-                session.writeTransaction(tx -> tx.run(
-                        "CREATE (c:Object {osm_id:$osm_id, name:$name, street:$street, house_number:$house_number})",
-                        parameters(
-                                "osm_id", relation.getId(),
-                                "name", nameTag.isEmpty() ? "" : nameTag.get().getValue(),
-                                "street", streetTag.isEmpty() ? "" : streetTag.get().getValue(),
-                                "house_number", houseNumberTag.isEmpty() ? "" : houseNumberTag.get().getValue()
-                        )
-                ));
-            }
+
+            session.writeTransaction(tx -> tx.run(
+                    "CREATE (c:Object {osm_id:$osm_id, name:$name, street:$street, house_number:$house_number})",
+                    parameters(
+                            "osm_id", relation.getId(),
+                            "name", nameTag.isEmpty() ? "" : nameTag.get().getValue(),
+                            "street", streetTag.isEmpty() ? "" : streetTag.get().getValue(),
+                            "house_number", houseNumberTag.isEmpty() ? "" : houseNumberTag.get().getValue()
+                    )
+            ));
+
 
             for (int memberNum = 0; memberNum < relation.getNumberOfMembers(); memberNum++) {
                 OsmRelationMember member = relation.getMember(memberNum);
@@ -137,30 +137,28 @@ public class OpenStreetMapService {
                     continue;
                 }
 
-                try (Session session = driver.session()) {
-                    List<Record> records = session.writeTransaction(tx -> {
-                        Result result = tx.run(
-                                "MATCH (a:Point), (b:Point), r = (a)-[:WAY {osm_id: $osm_id}]->(b) " +
-                                        "RETURN b.osm_id",
-                                parameters("osm_id", member.getId())
-                        );
+                List<Record> records = session.writeTransaction(tx -> {
+                    Result result = tx.run(
+                            "MATCH (a:Point), (b:Point), r = (a)-[:WAY {osm_id: $osm_id}]->(b) " +
+                                    "RETURN b.osm_id",
+                            parameters("osm_id", member.getId())
+                    );
 
-                        return result.list();
-                    });
+                    return result.list();
+                });
 
-                    for (Record record : records) {
-                        long bOsmId = record.get("b.osm_id").asLong();
-                        session.writeTransaction(tx -> tx.run(
-                                "MATCH (a:Object),(b:Point) " +
-                                        "WHERE a.osm_id = $a_osm_id AND b.osm_id = $b_osm_id " +
-                                        "CREATE (a)-[r:MEMBER]->(b) " +
-                                        "RETURN type(r)",
-                                parameters(
-                                        "a_osm_id", relation.getId(),
-                                        "b_osm_id", bOsmId
-                                )
-                        ));
-                    }
+                for (Record record : records) {
+                    long bOsmId = record.get("b.osm_id").asLong();
+                    session.writeTransaction(tx -> tx.run(
+                            "MATCH (a:Object),(b:Point) " +
+                                    "WHERE a.osm_id = $a_osm_id AND b.osm_id = $b_osm_id " +
+                                    "CREATE (a)-[r:MEMBER]->(b) " +
+                                    "RETURN type(r)",
+                            parameters(
+                                    "a_osm_id", relation.getId(),
+                                    "b_osm_id", bOsmId
+                            )
+                    ));
                 }
             }
         }
@@ -172,7 +170,37 @@ public class OpenStreetMapService {
         }
 
         @Override
-        public void complete() throws IOException {
+        public void handle(OsmBounds bounds) {
+        }
+
+        private Session getSession() {
+            sessionRef.compareAndSet(null, driver.session());
+
+            Session session = sessionRef.get();
+            if (!session.isOpen()) {
+                session = createNewSession();
+            }
+
+            return session;
+        }
+
+        private Session createNewSession() {
+            Session newSession = driver.session();
+            Session prevSession = sessionRef.getAndSet(newSession);
+
+            if (prevSession != null) {
+                prevSession.close();
+            }
+
+            return newSession;
+        }
+
+        @Override
+        public void complete() {
+            Session session = sessionRef.get();
+            if (session != null) {
+                session.close();
+            }
         }
     }
 }
