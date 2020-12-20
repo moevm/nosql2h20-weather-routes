@@ -49,9 +49,9 @@ public class RouteService {
                 ).single().get("a.osm_id").asLong();
 
                 return tx.run(
-                        "MATCH (a:Point {osm_id:$from_id} ), (b:Point {osm_id: $to_id}), p=allShortestPaths((a)-[*]-(b)) " +
+                        "MATCH (a:Point {osm_id:$from_id} ), (b:Point {osm_id: $to_id}), p=shortestPath((a)-[*]-(b)) " +
                                 "WITH nodes(p) AS ps, p " +
-                                "WHERE ALL(r IN relationships(p) WHERE endNode(r).precipitation_value < 200) " +
+                                "WHERE ALL(r IN relationships(p) WHERE endNode(r).precipitation_value < 200 AND type(r) = 'WAY') " +
                                 "RETURN ps, reduce(totalDistance = 0, x in relationships(p)| totalDistance + x.distance) as dist, reduce(totalPV = 0, x in ps | totalPV + x.precipitation_value)/SIZE(ps) as precipitation_avg " +
                                 "ORDER BY dist ASC LIMIT 1",
                         parameters(

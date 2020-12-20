@@ -5,6 +5,7 @@ function init() {
         url: "http://localhost:8080/api/object/all",
     })
         .done(function (obj) {
+            $('#objects').find("tr:gt(0)").remove();
             for (var i = 0; i < obj.length; i++) {
                 var info = '<tr><th>' + obj[i].name + '</th><td>' + obj[i].street + '</td><td>' + obj[i].houseNumber + '</td>'
                 var points = '<td> <div class="points">'
@@ -24,7 +25,7 @@ function init() {
             url: "http://localhost:8080/api/object/filter/name/" + val,
         })
             .done(function (obj) {
-                $('#objects').clear()
+                $('#objects').find("tr:gt(0)").remove();
 
                 for (var i = 0; i < obj.length; i++) {
                     var info = '<tr><th>' + obj[i].name + '</th><td>' + obj[i].street + '</td><td>' + obj[i].houseNumber + '</td>'
@@ -46,6 +47,7 @@ function init() {
             url: "http://localhost:8080/api/object/filter/address/" + val,
         })
             .done(function (obj) {
+                $('#objects').find("tr:gt(0)").remove();
                 for (var i = 0; i < obj.length; i++) {
                     var info = '<tr><th>' + obj[i].name + '</th><td>' + obj[i].street + '</td><td>' + obj[i].houseNumber + '</td>'
                     var points = '<td> <div class="points">'

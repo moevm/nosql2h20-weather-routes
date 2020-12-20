@@ -12,7 +12,6 @@ function init() {
 //    url: "ПОКА ХЗ",
 //    })
 //    .done(function( json ) {
-//          var obj = jQuery.parseJSON(json)
 //
 //    });
 }
