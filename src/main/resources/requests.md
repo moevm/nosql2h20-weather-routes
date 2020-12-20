@@ -44,12 +44,12 @@ CREATE (a)-[r:WAY { osm_id: 1, distance: distance(point({latitude: a.lat, longit
 
 8. Добавление Object
 
-CREATE (c:Object {name:'Собор' , street: 'Невский проспект', house_number: '14/3'})
+CREATE (c:Object {osm_id: 1, name:'Собор' , street: 'Невский проспект', house_number: '14/3'})
 
 9. Добавление Member
 
 MATCH (a:Object),(b:Point)
-WHERE a.name = 'Собор' AND b.osm_id = 3
+WHERE a.osm_id = 1 AND b.osm_id = 3
 CREATE (a)-[r:MEMBER]->(b)
 RETURN type(r)
 
@@ -68,14 +68,15 @@ RETURN o, p
 
 12. Вытащить ВСЕХ Object со ВСЕМИ point
 
-MATCH (n: Object) , m = (o)-[:MEMBER]-(p: Point)
-RETURN DISTINCT m
+MATCH (n: Object) , m = (n)-[:MEMBER]-(p: Point)
+RETURN  n as Object, collect(p) as Points
 
 ### ДЛЯ ФИЛЬТРАЦИИ ТАБЛИЦЫ
 
 13. Вытащить только Object с name
 
-MATCH (o:Object {name: 'Собор'})
+MATCH (o:Object)
+WHERE o.name CONTAINS 'Собор'
 RETURN o
 
 14. Вытащить только Object с street (house_number)
@@ -87,7 +88,7 @@ RETURN o
 15. Вытащить Object ПО АДРЕСУ (УЛИЦА + ДОМ)
 
 MATCH (o:Object )
-WHERE 'Невский проспект 14/3' CONTAINS o.street+ ' '+o.house_number
+WHERE 'Невский проспект 14/3' CONTAINS o.street AND 'Невский проспект 14/3' CONTAINS o.house_number
 RETURN o
 
 ### ДЛЯ ПОИСКА ПУТЕЙ И СТАТИСТИКИ
