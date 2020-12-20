@@ -63,8 +63,8 @@ RETURN n
 11. Вытащить Object и все его Point
 
 MATCH (o:Object), (p: Point)--(o)
-WHERE ID(o) = 7
-RETURN o, p
+WHERE ID(o) = 5
+RETURN o as Object, collect(p) as Points
 
 12. Вытащить ВСЕХ Object со ВСЕМИ point
 
