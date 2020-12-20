@@ -3,7 +3,6 @@ package nosql2h20.weather.routes.services;
 import nosql2h20.weather.routes.model.Object;
 import nosql2h20.weather.routes.model.Point;
 import org.neo4j.driver.*;
-import org.neo4j.driver.Record;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -85,11 +84,11 @@ public class ObjectService {
         return objects;
     }
 
-    private List<Object> toObjects(List<Record> records) {
+    static List<Object> toObjects(List<Record> records) {
         List<Object> result = new ArrayList<>();
 
         for (Record record : records) {
-            List<Point> points = record.get("points").asList(this::mapPoint);
+            List<Point> points = record.get("points").asList(ObjectService::mapPoint);
 
             Value objectValue = record.get("object");
             result.add(mapObject(objectValue, points));
@@ -98,7 +97,7 @@ public class ObjectService {
         return result;
     }
 
-    private Point mapPoint(Value pointValue) {
+    static Point mapPoint(Value pointValue) {
         return new Point(
                 pointValue.get("lat").asDouble(),
                 pointValue.get("lon").asDouble(),
@@ -106,7 +105,7 @@ public class ObjectService {
         );
     }
 
-    private Object mapObject(Value objectValue, List<Point> points) {
+    static Object mapObject(Value objectValue, List<Point> points) {
         return new Object(
                 objectValue.get("name").asString(),
                 objectValue.get("street").asString(),

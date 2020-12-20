@@ -2,9 +2,9 @@ package nosql2h20.weather.routes.model;
 
 public class Point {
 
-    private double latitude;
-    private double longitude;
-    private int precipitationValue;
+    private final double latitude;
+    private final double longitude;
+    private final int precipitationValue;
 
     public Point(double latitude, double longitude, int precipitationValue) {
         this.latitude = latitude;
@@ -19,7 +19,6 @@ public class Point {
     public double getLongitude() {
         return longitude;
     }
-
 
     public int getPrecipitationValue() {
         return precipitationValue;

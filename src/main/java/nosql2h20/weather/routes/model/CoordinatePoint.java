@@ -1,0 +1,31 @@
+package nosql2h20.weather.routes.model;
+
+public class CoordinatePoint {
+
+    private double latitude;
+    private double longitude;
+
+    public CoordinatePoint() {
+    }
+
+    public CoordinatePoint(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+}
