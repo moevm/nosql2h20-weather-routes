@@ -1,16 +1,24 @@
 {#include base.html}
 {#content}
-<h1 class="page_name">Admin panel</h1>
 <main>
     <div class="bts">
-        <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
+        <div class="card text-white bg-info mb-3" style="max-width: 28rem; margin-top:2px;">
             <div class="card-body">
                 <form id="upload_file_form" action="/api/import/map" method="post"
                       enctype="multipart/form-data">
-                    <label for="file">Choose .osm file to upload</label>
+                    <label for="file">Выберите .osm файл для загрузки:</label>
                     <input id="file" name="uploadedFile" type="file" multiple>
                     <button id="upload_btn" class="btn btn-secondary" type="submit">
-                        Upload
+                        Загрузить файл
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="card text-white bg-info mb-3" style="max-width: 28rem;">
+            <div class="card-body">
+                <form id="export_file_form" action="/api/import/map" method="post">
+                    <button id="export_btn" class="btn btn-secondary" type="submit">
+                        Экспорт базы данных
                     </button>
                 </form>
             </div>
