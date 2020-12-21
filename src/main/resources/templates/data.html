@@ -3,23 +3,9 @@
 <h1 class="page_name">Admin panel</h1>
 <main>
     <div class="bts">
-        <div>
-            <a class="btn btn-secondary" href="/api/database/map/upload/spb_full.osm">
-                Upload SPB full map
-            </a>
-            <a class="btn btn-secondary" href="/api/database/map/upload/spb_center.osm">
-                Upload SPB center map
-            </a>
-            <a class="btn btn-secondary" href="/api/database/map/upload/test_map.osm">
-                Upload SPB test map
-            </a>
-        </div>
-        <div>
-            <p>or</p>
-        </div>
         <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
             <div class="card-body">
-                <form id="upload_file_form" action="/api/database/map/upload" method="post"
+                <form id="upload_file_form" action="/api/import/map" method="post"
                       enctype="multipart/form-data">
                     <label for="file">Choose .osm file to upload</label>
                     <input id="file" name="uploadedFile" type="file" multiple>

@@ -9,15 +9,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("/admin")
-public class AdminResource {
+@Path("/data")
+public class DataResource {
 
     @Inject
-    Template admin;
+    Template data;
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public TemplateInstance admin() {
-        return admin.instance();
+    public TemplateInstance data() {
+        return data.instance();
     }
 }

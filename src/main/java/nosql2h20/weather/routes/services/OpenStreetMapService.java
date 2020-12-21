@@ -9,13 +9,10 @@ import org.neo4j.driver.Driver;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,20 +24,15 @@ import static org.neo4j.driver.Values.parameters;
 
 @ApplicationScoped
 public class OpenStreetMapService {
-    private static final Logger logger = LoggerFactory.getLogger(OpenStreetMapService.class);
 
     @Inject
     Driver driver;
 
-    public void readMap(File map) throws Exception {
-        try {
-            OsmXmlReader reader = new OsmXmlReader(map, false);
-            reader.setHandler(new Neo4jHandler(driver));
+    public void readMap(InputStream mapData) throws Exception {
+        OsmXmlReader reader = new OsmXmlReader(mapData, false);
+        reader.setHandler(new Neo4jHandler(driver));
 
-            reader.read();
-        } catch (FileNotFoundException e) {
-            logger.error("Unable to find map file. Path: {}.", map, e);
-        }
+        reader.read();
     }
 
     private static class Neo4jHandler implements OsmHandler {
@@ -76,7 +68,8 @@ public class OpenStreetMapService {
                 session.writeTransaction(tx -> tx.run(
                         "MATCH (a:Point),(b:Point) " +
                                 "WHERE a.osm_id = $a_osm_id AND b.osm_id = $b_osm_id " +
-                                "CREATE (a)-[r:WAY { osm_id: $osm_id, distance: distance(point({latitude: a.lat, longitude: a.lon}), point({latitude: b.lat, longitude: b.lon}))}]->(b)",
+                                "WITH a, b, distance(point({latitude: a.lat, longitude: a.lon}), point({latitude: b.lat, longitude: b.lon})) as d " +
+                                "CREATE (a)-[r:WAY { osm_id: $osm_id, distance: d}]->(b)",
                         parameters(
                                 "osm_id", way.getId(),
                                 "a_osm_id", nodePair.getLeft(),
