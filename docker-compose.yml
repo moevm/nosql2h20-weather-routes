@@ -11,8 +11,8 @@ services:
     restart: always
   db:
     build:
-      context: .
-      dockerfile: src/main/docker/neo4j/Dockerfile
+      context: src/main/docker/neo4j/
+      dockerfile: Dockerfile
     environment:
       NEO4J_AUTH: 'neo4j/secret'
     ports:
