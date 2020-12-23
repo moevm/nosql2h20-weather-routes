@@ -14,5 +14,11 @@ function init() {
 //    .done(function( json ) {
 //
 //    });
+var myPolyline = new ymaps.GeoObject({
+    geometry: {
+        type: "LineString",
+        coordinates: [[...]]
+    }
+});
 }
 }

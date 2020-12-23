@@ -8,16 +8,21 @@ function init() {
             $('#objects').find("tr:gt(0)").remove();
             for (var i = 0; i < obj.length; i++) {
                 var info = '<tr><th>' + obj[i].name + '</th><td>' + obj[i].street + '</td><td>' + obj[i].houseNumber + '</td>'
-                var points = '<td> <div class="points">'
+                var lat = '<td> <div class="points">'
                 for (var j = 0; j < obj[i].points.length; j++) {
-                    points += obj[i].points[j].latitude + ' ' + obj[i].points[j].longitude + ' '
+                    lat += obj[i].points[j].latitude + ' '
                 }
-                points += '</div></td><tr>'
-                console.log(info + points)
+                lat += '</div></td>'
+                var lon = '<td> <div class="points">'
+                    for (var j = 0; j < obj[i].points.length; j++) {
+                        lon += obj[i].points[j].longitude + ' '
+                    }
+                    lon += '</div></td><tr>'
+
                 $('#objects').append(info + points);
             }
         });
-//
+// + obj[i].points[j].longitude + ' '
     $('#searchname').keyup(function () {
         val = $('#searchname').val()
         $.ajax({
