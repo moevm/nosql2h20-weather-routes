@@ -16,13 +16,18 @@ function init() {
                 var lon = '<td> <div class="points">'
                     for (var j = 0; j < obj[i].points.length; j++) {
                         lon += obj[i].points[j].longitude + ' '
-                    }
-                    lon += '</div></td><tr>'
+                }
+                lon += '</div></td>'
+                var perc = '<td> <div class="points">'
+                    for (var j = 0; j < obj[i].points.length; j++) {
+                        perc += obj[i].points[j].precipitationValue + ' '
+                }
+                perc += '</div></td><tr>'
 
-                $('#objects').append(info + points);
+                $('#objects').append(info + lat + lon + perc);
             }
         });
-// + obj[i].points[j].longitude + ' '
+//
     $('#searchname').keyup(function () {
         val = $('#searchname').val()
         $.ajax({
