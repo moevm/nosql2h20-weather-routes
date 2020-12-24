@@ -64,4 +64,25 @@ function init() {
                 }
             });
     })
+   $('#addbtn').on('click', function() {
+        nameValue = $('#addname').val()
+        streetValue = $('#addstr').val()
+        numberValue = $('#addnum').val()
+        pointsValue = $('#addpoints').val()
+
+        if (nameValue == "" || streetValue == "" || numberValue == "" || pointsValue == "") {
+            alert("Пожалуйста, заполните поля формы")
+            return
+        }
+        $.ajax({
+            method: "POST",
+            url: hui,
+            data: ([{ "name": nameValue,
+                "street": streetValue,
+                "number": numberValue,
+                "points": pointsValue
+             }]),
+        })
+   })
+
 }
