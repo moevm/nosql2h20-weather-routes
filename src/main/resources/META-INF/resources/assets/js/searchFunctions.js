@@ -6,28 +6,22 @@ function init() {
     })
         .done(function (obj) {
             $('#objects').find("tr:gt(0)").remove();
+//$.getJSON('assets/js/all.json', function(obj) {
             for (var i = 0; i < obj.length; i++) {
                 var info = '<tr><th>' + obj[i].name + '</th><td>' + obj[i].street + '</td><td>' + obj[i].houseNumber + '</td>'
-                var lat = '<td> <div class="points">'
+                var point = '<td><div class="points"><table><tr><th>Широта</th><th>Долгота</th><th>Кол-во осадков</th>'
+                point += '</tr><tbody>'
                 for (var j = 0; j < obj[i].points.length; j++) {
-                    lat += obj[i].points[j].latitude + ' '
+                point += '<td>'
+                    point += obj[i].points[j].latitude + '</td><td>'
+                    point += obj[i].points[j].longitude + '</td><td>'
+                    point += obj[i].points[j].precipitationValue + '</td></tr>'
                 }
-                lat += '</div></td>'
-                var lon = '<td> <div class="points">'
-                    for (var j = 0; j < obj[i].points.length; j++) {
-                        lon += obj[i].points[j].longitude + ' '
-                }
-                lon += '</div></td>'
-                var perc = '<td> <div class="points">'
-                    for (var j = 0; j < obj[i].points.length; j++) {
-                        perc += obj[i].points[j].precipitationValue + ' '
-                }
-                perc += '</div></td><tr>'
-
-                $('#objects').append(info + lat + lon + perc);
+                point += '</tbody></table></div></td></tr>';
+                $('#objects').append(info + point);
             }
         });
-//
+
     $('#searchname').keyup(function () {
         val = $('#searchname').val()
         $.ajax({
