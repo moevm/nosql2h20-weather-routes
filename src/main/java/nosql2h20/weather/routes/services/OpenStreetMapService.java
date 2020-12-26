@@ -9,6 +9,8 @@ import org.neo4j.driver.Driver;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -24,6 +26,7 @@ import static org.neo4j.driver.Values.parameters;
 
 @ApplicationScoped
 public class OpenStreetMapService {
+    private static final Logger logger = LoggerFactory.getLogger(OpenStreetMapService.class);
 
     @Inject
     Driver driver;
@@ -33,6 +36,8 @@ public class OpenStreetMapService {
         reader.setHandler(new Neo4jHandler(driver));
 
         reader.read();
+
+        logger.debug("Map was successfully handled.");
     }
 
     private static class Neo4jHandler implements OsmHandler {

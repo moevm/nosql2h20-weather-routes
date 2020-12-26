@@ -1,44 +1,32 @@
-var files;
-
 function init() {
-
-    $('input[type=file]').on('change', function(){
-        files = this.files;
-        console.log(files)
-    });
-
     $('#upload_btn').on('click', function () {
         event.stopPropagation(); // Остановка происходящего
         event.preventDefault();
 
-        var data = new FormData();
-        $.each( files, function( key, value ){
-            data.append( key, value );
-            console.log(data)
-        });
-
+        let file = $('#file').prop('files')[0]
+        let data = new FormData();
+        data.append('uploadedFile', file)
 
         $.ajax({
-            url: "http://localhost:8080/api/import/map",
+            url: '/api/import/map',
             method: 'POST',
             data: data,
             cache: false,
-            dataType: 'xml',
-            processData: false, // Не обрабатываем файлы (Don't process the files)
-            contentType: false,
+            processData: false,
+            contentType: false
         }).done(function (json) {
         });
     });
 
     $('#export_btn').on('click', function () {
         $.ajax({
-            url: "api/export"
+            url: '/api/export'
         }).done(function (xml) {
-            var xmlText = new XMLSerializer().serializeToString(xml);
-            var blob = new Blob([xmlText], {type: 'text/plain'});
-            var link = document.createElement('a');
+            let xmlText = new XMLSerializer().serializeToString(xml);
+            let blob = new Blob([xmlText], {type: 'text/plain'});
+            let link = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);
-            link.download = "database.graphml";
+            link.download = 'database.graphml';
             link.click();
         })
     });
