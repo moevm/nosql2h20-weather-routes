@@ -1,14 +1,16 @@
-package nosql2h20.weather.routes.model;
+package nosql2h20.weather.routes.model.requests;
 
-public class RouteRequest {
+import nosql2h20.weather.routes.model.CoordinatePoint;
+
+public class FindRouteRequest {
 
     private CoordinatePoint from;
     private CoordinatePoint to;
 
-    public RouteRequest() {
+    public FindRouteRequest() {
     }
 
-    public RouteRequest(CoordinatePoint from, CoordinatePoint to) {
+    public FindRouteRequest(CoordinatePoint from, CoordinatePoint to) {
         this.from = from;
         this.to = to;
     }

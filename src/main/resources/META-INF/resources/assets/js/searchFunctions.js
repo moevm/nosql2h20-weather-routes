@@ -46,23 +46,36 @@ function init() {
     $('#addbtn').on('click', function () {
         nameValue = $('#addname').val()
         streetValue = $('#addstr').val()
-        numberValue = $('#addnum').val()
+        houseNumberValue = $('#addnum').val()
         pointsValue = $('#addpoints').val()
 
-        if (nameValue == '' || streetValue == '' || numberValue == '' || pointsValue == '') {
+        if (nameValue === '' || streetValue === '' || houseNumberValue === '' || pointsValue === '') {
             alert('Пожалуйста, заполните поля формы.')
             return
         }
 
+        let parsedPoints = []
+        for (let pointValue of pointsValue.split(', ')) {
+            let splitPointValue = pointValue.split(' ')
+
+            parsedPoints.push({
+                "latitude": parseFloat(splitPointValue[0]),
+                "longitude": parseFloat(splitPointValue[1]),
+                "precipitationValue": parseInt(splitPointValue[2])
+            })
+        }
         $.ajax({
             method: 'POST',
-            url: hui, //TODO set REST resource URL
-            data: ([{
+            url: '/api/object/add',
+            data: JSON.stringify({
                 'name': nameValue,
                 'street': streetValue,
-                'number': numberValue,
-                'points': pointsValue
-            }]),
+                'houseNumber': houseNumberValue,
+                'points': parsedPoints
+            }),
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
         })
+            .done()
     })
 }
