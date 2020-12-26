@@ -3,25 +3,18 @@
 <!--Подключаем яндекс карты-->
 <script src="https://api-maps.yandex.ru/2.1/?apikey=3f8c1db2-2338-411e-a960-9a6015500eec&lang=ru_RU" type="text/javascript">
 </script>
-<script type="text/javascript">
-    ymaps.ready(init);
-    function init(){
-        var myMap = new ymaps.Map("map_canvas", {
-            center: [59.9386, 30.3141],
-            zoom: 10
-        });
-    }
-</script>
+
+<script src="assets/js/formFunctions.js" type="text/javascript"></script>
 {/links}
 {#content}
 <header>
-    <input name="from" class="form-control" type="text" value="Откуда">
-    <input name="to" class="form-control" type="text" value="Куда">
+    <input id="from" required class="form-control" type="text" placeholder="Откуда">
+    <input id="to" required class="form-control" type="text" placeholder="Куда">
 </header>
 <main>
     <div class="map" id="map_canvas"></div>
 
-    <div class="bts">
+    <div class="butt">
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -29,13 +22,10 @@
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <a class="dropdown-item" href="/search">Поиск</a>
-                <a class="dropdown-item" href="#">Импорт</a>
-                <a class="dropdown-item" href="#">Экспорт</a>
+                <a class="dropdown-item" href="/data">Импорт/Экспорт</a>
             </div>
         </div>
-        <form action="/route">
-            <button type="submit" name="searchbtn" class="btn btn-primary">Найти</button>
-        </form>
+            <button type="submit" id="searchbtn" class="btn btn-primary">Найти</button>
     </div>
 </main>
 <footer>

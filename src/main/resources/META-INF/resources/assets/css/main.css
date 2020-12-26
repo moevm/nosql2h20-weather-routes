@@ -52,10 +52,15 @@ main {
 
 div.bts {
     display: flex;
+    flex-flow: column wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+div.butt{
+    display: flex;
     flex-flow: row wrap;
     justify-content: space-around;
 }
-
 /*
 
 footer {
@@ -70,4 +75,23 @@ div.map {
     width: 685px;
     height: 400px;
     margin: 3%;
+}
+
+.points {
+    overflow: scroll;
+    width: 400px;
+    height: 200px;
+}
+
+#searchname{
+margin: 0;
+}
+
+#upload_btn{
+margin-left: auto;
+margin-right: auto;
+}
+
+.hidden {
+    display: none;
 }
