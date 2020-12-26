@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static nosql2h20.weather.routes.services.Queries.*;
 import static org.neo4j.driver.Values.parameters;
 
 @ApplicationScoped
@@ -41,7 +42,6 @@ public class OpenStreetMapService {
     }
 
     private static class Neo4jHandler implements OsmHandler {
-
         private final Driver driver;
         private final AtomicReference<Session> sessionRef = new AtomicReference<>();
 
@@ -54,7 +54,7 @@ public class OpenStreetMapService {
             Session session = getSession();
 
             session.writeTransaction(tx -> tx.run(
-                    "CREATE (p:Point {osm_id: $osm_id, lat: $lat, lon: $lon, precipitation_value: 0})",
+                    CREATE_POINT_QUERY,
                     parameters(
                             "osm_id", node.getId(),
                             "lat", node.getLatitude(),
@@ -71,10 +71,7 @@ public class OpenStreetMapService {
 
             for (Pair<Long, Long> nodePair : nodePairs) {
                 session.writeTransaction(tx -> tx.run(
-                        "MATCH (a:Point),(b:Point) " +
-                                "WHERE a.osm_id = $a_osm_id AND b.osm_id = $b_osm_id " +
-                                "WITH a, b, distance(point({latitude: a.lat, longitude: a.lon}), point({latitude: b.lat, longitude: b.lon})) as d " +
-                                "CREATE (a)-[r:WAY { osm_id: $osm_id, distance: d}]->(b)",
+                        CREATE_WAY_QUERY,
                         parameters(
                                 "osm_id", way.getId(),
                                 "a_osm_id", nodePair.getLeft(),
@@ -119,7 +116,7 @@ public class OpenStreetMapService {
             Optional<OsmTag> houseNumberTag = findTag(tags, "addr:housenumber");
 
             session.writeTransaction(tx -> tx.run(
-                    "CREATE (c:Object {osm_id:$osm_id, name:$name, street:$street, house_number:$house_number})",
+                    CREATE_OBJECT_QUERY,
                     parameters(
                             "osm_id", relation.getId(),
                             "name", nameTag.isEmpty() ? "" : nameTag.get().getValue(),
@@ -137,8 +134,7 @@ public class OpenStreetMapService {
 
                 List<Record> records = session.writeTransaction(tx -> {
                     Result result = tx.run(
-                            "MATCH (a:Point), (b:Point), r = (a)-[:WAY {osm_id: $osm_id}]->(b) " +
-                                    "RETURN b.osm_id",
+                            FIND_WAY_POINTS_QUERY,
                             parameters("osm_id", member.getId())
                     );
 
@@ -146,15 +142,12 @@ public class OpenStreetMapService {
                 });
 
                 for (Record record : records) {
-                    long bOsmId = record.get("b.osm_id").asLong();
+                    long pointOsmId = record.get("point").get("osm_id").asLong();
                     session.writeTransaction(tx -> tx.run(
-                            "MATCH (a:Object),(b:Point) " +
-                                    "WHERE a.osm_id = $a_osm_id AND b.osm_id = $b_osm_id " +
-                                    "CREATE (a)-[r:MEMBER]->(b) " +
-                                    "RETURN type(r)",
+                            CREATE_MEMBER_QUERY,
                             parameters(
                                     "a_osm_id", relation.getId(),
-                                    "b_osm_id", bOsmId
+                                    "b_osm_id", pointOsmId
                             )
                     ));
                 }

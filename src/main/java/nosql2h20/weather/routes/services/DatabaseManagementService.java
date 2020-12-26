@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import static nosql2h20.weather.routes.services.Queries.CLEAR_DATABASE_QUERY;
+import static nosql2h20.weather.routes.services.Queries.EXPORT_DATA_QUERY;
+
 @ApplicationScoped
 public class DatabaseManagementService {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseManagementService.class);
@@ -18,12 +21,8 @@ public class DatabaseManagementService {
 
     public String exportDatabase() {
         try (Session session = driver.session()) {
-            Record result = session.writeTransaction(tx ->
-                    tx.run(
-                            "CALL apoc.export.graphml.all(null, {stream:true}) " +
-                                    "YIELD file, nodes, relationships, properties, data " +
-                                    "RETURN nodes, relationships, properties, data"
-                    ).single()
+            Record result = session.writeTransaction(
+                    tx -> tx.run(EXPORT_DATA_QUERY).single()
             );
 
             long nodes = result.get("nodes").asLong();
@@ -42,12 +41,8 @@ public class DatabaseManagementService {
 
     public void clearDatabase() {
         try (Session session = driver.session()) {
-            Record record = session.writeTransaction(tx ->
-                    tx.run(
-                            "MATCH (n) " +
-                                    "DETACH DELETE n " +
-                                    "RETURN count(n) as deleted"
-                    ).single()
+            Record record = session.writeTransaction(
+                    tx -> tx.run(CLEAR_DATABASE_QUERY).single()
             );
 
             logger.debug("Database was successfully cleared. Removed {} objects.", record.get("deleted").asLong());

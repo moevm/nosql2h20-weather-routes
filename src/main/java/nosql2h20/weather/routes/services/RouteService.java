@@ -14,6 +14,8 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static nosql2h20.weather.routes.services.Queries.FIND_NEAREST_POINT_QUERY;
+import static nosql2h20.weather.routes.services.Queries.FIND_ROUTE_QUERY;
 import static org.neo4j.driver.Values.parameters;
 
 @ApplicationScoped
@@ -27,10 +29,7 @@ public class RouteService {
         try (Session session = driver.session()) {
             Record routeRecord = session.writeTransaction(tx -> {
                 Long nearestFromId = tx.run(
-                        "MATCH (a: Point) " +
-                                "WITH a, distance(point({latitude: a.lat, longitude: a.lon}), point({latitude: $lat, longitude: $lon})) as d " +
-                                "ORDER BY d ASC " +
-                                "RETURN a.osm_id LIMIT 1",
+                        FIND_NEAREST_POINT_QUERY,
                         parameters(
                                 "lat", from.getLatitude(),
                                 "lon", from.getLongitude()
@@ -38,10 +37,7 @@ public class RouteService {
                 ).single().get("a.osm_id").asLong();
 
                 Long nearestToId = tx.run(
-                        "MATCH (a: Point) " +
-                                "WITH a, distance(point({latitude: a.lat, longitude: a.lon}), point({latitude: $lat, longitude: $lon})) as d " +
-                                "ORDER BY d ASC " +
-                                "RETURN a.osm_id LIMIT 1",
+                        FIND_NEAREST_POINT_QUERY,
                         parameters(
                                 "lat", to.getLatitude(),
                                 "lon", to.getLongitude()
@@ -49,11 +45,7 @@ public class RouteService {
                 ).single().get("a.osm_id").asLong();
 
                 return tx.run(
-                        "MATCH (a:Point {osm_id:$from_id} ), (b:Point {osm_id: $to_id}), p=shortestPath((a)-[:WAY*]-(b)) " +
-                                "UNWIND nodes(p) AS points " +
-                                "RETURN points, " +
-                                "reduce(totalDistance = 0, x in relationships(p)| totalDistance + x.distance) as dist, " +
-                                "reduce(totalPV = 0, x in nodes(p) | totalPV + x.precipitation_value) / SIZE(nodes(p)) as precipitation_avg ",
+                        FIND_ROUTE_QUERY,
                         parameters(
                                 "from_id", nearestFromId,
                                 "to_id", nearestToId

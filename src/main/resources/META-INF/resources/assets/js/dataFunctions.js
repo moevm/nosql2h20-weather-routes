@@ -6,7 +6,7 @@ function init() {
         event.preventDefault();
 
         $('#loader').removeClass('hidden')
-        $('#upload_btn').prop( "disabled", true );
+        $('#upload_btn').prop('disabled', true);
 
         let file = $('#file').prop('files')[0]
         let data = new FormData();
@@ -19,30 +19,31 @@ function init() {
             cache: false,
             processData: false,
             contentType: false
-        }).done(function (json) {
+        }).done(function () {
             $('#loader').addClass('hidden');
-            $('#upload_btn').prop( "disabled", false );
+            $('#upload_btn').prop('disabled', false);
             alert('Файл успешно загружен');
-        }).fail(function(data){
-            $('#upload_btn').prop( "disabled", false );
+        }).fail(function () {
+            $('#loader').addClass('hidden');
+            $('#upload_btn').prop('disabled', false);
             alert('При загрузке файла произошла ошибка')
         });
     });
 
     $('#export_btn').on('click', function () {
-        $('#export_btn').prop( "disabled", true );
+        $('#export_btn').prop('disabled', true);
         $.ajax({
             url: '/api/export'
         }).done(function (xml) {
-            $('#export_btn').prop( "disabled", false );
+            $('#export_btn').prop('disabled', false);
             let xmlText = new XMLSerializer().serializeToString(xml);
             let blob = new Blob([xmlText], {type: 'text/plain'});
             let link = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);
             link.download = 'database.graphml';
             link.click();
-        }).fail(function(data){
-            $('#export_btn').prop( "disabled", false );
+        }).fail(function () {
+            $('#export_btn').prop('disabled', false);
             alert('При экспорте базы данных  произошла ошибка')
         });
     });
