@@ -10,9 +10,12 @@
                 <form id="upload_file_form" enctype="multipart/form-data">
                     <label for="file">Выберите .osm файл для загрузки:</label>
                     <input id="file" multiple="multiple" name="uploadedFile" type="file">
-                    <button id="upload_btn" class="btn btn-secondary" type="submit">
-                        Загрузить файл
-                    </button>
+                        <button id="upload_btn" class="btn btn-secondary" type="submit">
+                            Загрузить файл
+                        </button>
+                        <div id="loader" class="spinner-border text-light spinner-border-sm" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
                 </form>
             </div>
         </div>
@@ -23,6 +26,9 @@
                 </a>
             </div>
         </div>
+        <form action="/">
+            <button type="submit" name="backbtn" class="btn btn-primary">Назад</button>
+        </form>
     </div>
 </main>
 <footer>

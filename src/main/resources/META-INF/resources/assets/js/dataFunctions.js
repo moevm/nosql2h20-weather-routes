@@ -1,7 +1,11 @@
 function init() {
+    $('#loader').addClass('hidden')
+
     $('#upload_btn').on('click', function () {
         event.stopPropagation(); // Остановка происходящего
         event.preventDefault();
+
+        $('#loader').removeClass('hidden')
 
         let file = $('#file').prop('files')[0]
         let data = new FormData();
@@ -15,6 +19,10 @@ function init() {
             processData: false,
             contentType: false
         }).done(function (json) {
+            $('#loader').addClass('hidden')
+            alert('Файл успешно загружен');
+        }).fail(function(data){
+            alert('При загрузке файла произошла ошибка')
         });
     });
 
