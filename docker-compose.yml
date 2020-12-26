@@ -3,14 +3,16 @@ services:
   backend:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: src/main/docker/Dockerfile.jvm
     ports:
       - "8080:8080"
     depends_on:
       - db
     restart: always
   db:
-    image: neo4j:latest
+    build:
+      context: src/main/docker/neo4j/
+      dockerfile: Dockerfile
     environment:
       NEO4J_AUTH: 'neo4j/secret'
     ports:

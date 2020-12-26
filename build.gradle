@@ -1,42 +1,56 @@
 plugins {
     id 'java'
-
-    id 'org.springframework.boot' version '2.3.4.RELEASE'
-    id "io.spring.dependency-management" version "1.0.10.RELEASE"
+    id 'io.quarkus'
 }
 
 group = 'nosql2h20'
 version = '0.0.1-SNAPSHOT'
 
-sourceCompatibility = '11'
-targetCompatibility = '11'
-
 repositories {
+    mavenLocal()
     mavenCentral()
+
+    maven {
+        url 'https://mvn.topobyte.de/'
+    }
+    maven {
+        url 'http://mvn.slimjars.com//'
+    }
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.neo4j.driver:neo4j-java-driver:4.0.1'
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
+    implementation 'io.quarkus:quarkus-arc'
+    implementation 'io.quarkus:quarkus-resteasy'
+    implementation 'io.quarkus:quarkus-resteasy-jsonb'
+    implementation 'io.quarkus:quarkus-resteasy-multipart'
+    implementation 'io.quarkus:quarkus-resteasy-qute'
+
+    implementation 'io.quarkus:quarkus-neo4j'
+
+    implementation 'org.jboss.logmanager:log4j2-jboss-logmanager'
+
+    implementation 'de.topobyte:osm4j-core:1.1.0'
+    implementation 'de.topobyte:osm4j-xml:1.1.0'
+
+    // Utils:
+    implementation 'org.apache.commons:commons-lang3:3.11'
+
+    testImplementation 'io.quarkus:quarkus-junit5'
+    testImplementation 'io.rest-assured:rest-assured'
 }
 
-test {
-    useJUnitPlatform {
-        excludeTags 'integration'
-    }
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
-task integrationTest(type: Test) {
-    useJUnitPlatform {
-        includeTags 'integration'
-    }
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
 }
 
-bootJar {
-    baseName = 'nosql2h20-weather-routes'
-    version = project.version
+compileTestJava {
+    options.encoding = 'UTF-8'
 }
